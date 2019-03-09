@@ -1,6 +1,123 @@
 $primary-color: #444;
+$secondary-color: #eece1a;
+$show-home-image: true;
+$home-image: url(../img/background.jpg);
+$background-opacity: 0.9;
+
+//basically a function, the easeout is the -> //first parameter is what you wanna transition, all means anything that is transitionable, next parameter is the time it takes, and the next is the motion
+@mixin easeOut {
+  transition: all 0.5s ease-out;
+}
+
+@mixin background {
+  //if show-home-image is true then it will look for the property #bg-img and we will set the background image into the property we set up at the top with the image.
+  @if $show-home-image {
+    &#bg-img {
+      background: $home-image;
+      background-attachment: fixed;
+      background-size: cover;
+
+      //because we want this to be inside the bg-img - from overlay we changed it into after
+
+      //when we use before and after, we need to add content variable - after removing the overlay from our html, you can see that we will have the same result - this is called pseudo element, something that is not in the html but the css treats it like one.  
+      &:after {
+        content: "";
+        //we want this to cover the whole body
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 100%;
+        height: 100%;
+        z-index: -1; //now the text have move upfront
+
+        //we want to use rgba (red green blue alpha), it allows us to have a color, but also to have an opacity so we can see through it, so now we have both gray background and as well as the opacity needed to have a good mix -- but don't forget to edit the z-index, remember the higher the number the closer it is to you. so in this overlay, we want to push it behind, so let's set it to negative number to make sure it will push back.
+        background: rgba($primary-color, $background-opacity);
+      }
+    }
+  }
+}
+
+//let's add a box-sizing property for everything, so if you wanna select everything in css, you wanna use * means all,
+* {
+  box-sizing: border-box;
+}
 
 body {
+  @include background;
   background: $primary-color;
   color: #fff;
+  height: 100%;
+  margin: 0;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  line-height: 1.5;
+}
+
+//Headings
+h1,
+h2,
+h3 {
+  margin: 0;
+  font-weight: 400;
+
+  //& means include class lg-heading
+  &.lg-heading {
+    font-size: 6rem;
+  }
+
+  //on the padding, the 0.2rem will be added on the top and bottom, and the 1rem will be added on the left and right
+  &.sm-heading {
+    margin-bottom: 2rem;
+    padding: 0.2rem 1rem;
+    //lighten takes 2 color parameter, first is the primary color and second is how much are we going to lighten it. and then we wrapped it with rgba so we can add another parameter for the opacity
+    background: rgba(lighten($primary-color, 2), 0.5);
+  }
+}
+
+a {
+  color: #fff;
+  text-decoration: none;
+}
+
+header {
+  position: fixed;
+
+  //z-index is how close to you a z element is, the bigger the number, the closer to you it is.
+  z-index: 2;
+  width: 100%;
+}
+
+.text-secondary {
+  color: $secondary-color;
+}
+
+main {
+  padding: 4rem;
+  height: 100%;
+
+  //since we are nesting this, it will only affect the icons that are inside the main property
+  .icons {
+    margin-top: 1rem;
+
+    a {
+      padding: 0.4rem;
+
+      &:hover {
+        color: $secondary-color;
+        //first parameter is what you wanna transition, all means anything that is transitionable, next parameter is the time it takes, and the next is the motion -- however we moved the transition property at the top so we can do mixin, so to add mixin we need to say include and then the name of the mixin
+
+        //so now that we created mixin, instead of repeating this style transition we can just say include on every code it will be use.
+        @include easeOut();
+      }
+    }
+  }
+
+  //we want this inside main but not on the others so we put it here
+
+  &#home {
+    overflow: hidden;
+    h1 {
+      //vh = viewport height,  you can think of it like think of a height that is 100 slices, and 20vh is like 20 of those slices, so if you say 100vh then it will take up the whole thing, and if 50vh then it will take up half of it.
+      margin-top: 20vh;
+    }
+  }
 }
