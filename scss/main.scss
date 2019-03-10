@@ -2,7 +2,8 @@
 
 @import "config";
 @import "menu";
-@import "mobile";
+//we remove here the import mobile and place it on the bottom because we want this to run after our initial css
+
 //let's add a box-sizing property for everything, so if you wanna select everything in css, you wanna use * means all,
 * {
   box-sizing: border-box;
@@ -11,7 +12,7 @@
 body {
   @include background;
   background: $primary-color;
-  color: #fff;
+  color: set-text-color($primary-color);
   height: 100%;
   margin: 0;
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
@@ -58,8 +59,10 @@ header {
 
 main {
   padding: 4rem;
-  height: 100%;
+  //height: 100%;
 
+  //we changed the height of our main page because what will happen if we dont is that the footer will go up insteadof sticking at the bottom, so we would want to calc it by 100 height slices - 60px which is the height of the footer so it wont eat up whenever we make some changes on the body.
+  min-height: calc(100vh - 60px);
   //since we are nesting this, it will only affect the icons that are inside the main property
   .icons {
     margin-top: 1rem;
@@ -87,3 +90,53 @@ main {
     }
   }
 }
+
+.about-info {
+  display: grid;
+  grid-gap: 30px;
+  grid-template-areas:
+    "bioimage bio bio"
+    "job1 job2 job3";
+
+  grid-template-columns: repeat(3, 1fr);
+
+  .bio-image {
+    grid-area: bioimage;
+    margin: auto;
+    border-radius: 50%;
+    border: $secondary-color;
+  }
+
+  .bio {
+    grid-area: bio;
+    font-size: 1.5rem;
+  }
+
+  .job-1 {
+    grid-area: job1;
+  }
+
+  .job-2 {
+    grid-area: job2;
+  }
+
+  .job-3 {
+    grid-area: job3;
+  }
+
+  .job {
+    background: lighten($primary-color, 5);
+    padding: 0.5rem;
+    border-bottom: $secondary-color 5px solid;
+  }
+}
+
+#main-footer {
+  text-align: center;
+  padding: 1rem;
+  background: darken($primary-color, 10);
+  color: set-text-color($primary-color);
+  height: 60px;
+}
+
+@import "mobile";
